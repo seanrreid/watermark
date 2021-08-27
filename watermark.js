@@ -8,15 +8,22 @@ const watermark = async (ORIGINAL_IMAGE, WATERMARK, TEXTDATA) => {
             Jimp.loadFont(Jimp.FONT_SANS_32_WHITE),
         ]);
 
-        logo.resize(image.bitmap.width / 2, Jimp.AUTO);
+        logo.resize(image.bitmap.width * 0.85, Jimp.AUTO);
+        logo.opacity(0.6);
 
         const X = (image.bitmap.width - logo.bitmap.width) / 2;
         const Y = (image.bitmap.height - logo.bitmap.width) / 2;
 
-        const textWidth = Jimp.measureText(font, TEXTDATA.text);
-        const textHeight = Jimp.measureTextHeight(font, TEXTDATA.text, 100);
+        let textWidth = Jimp.measureText(font, TEXTDATA.text);
+
+        textWidth =
+            textWidth >= image.bitmap.width
+                ? image.bitmap.width * 0.9
+                : textWidth;
+
+        // const textHeight = Jimp.measureTextHeight(font, TEXTDATA.text, 100);
         const textPlacementX = (image.bitmap.width - textWidth) / 2;
-        const textPlacementY = image.bitmap.height - textHeight;
+        const textPlacementY = image.bitmap.height * 0.8;
 
         image.print(
             font,
@@ -25,14 +32,14 @@ const watermark = async (ORIGINAL_IMAGE, WATERMARK, TEXTDATA) => {
             {
                 text: TEXTDATA.text,
                 alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-                alignmentY: Jimp.VERTICAL_ALIGN_CENTER,
+                alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM,
             },
             textWidth
         );
         return image.composite(logo, X, Y, [
             {
                 mode: Jimp.BLEND_OVERLAY,
-                opacitySource: 1,
+                opacitySource: 0.9,
                 opacityDest: 1,
             },
         ]);
