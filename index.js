@@ -5,7 +5,6 @@ const path = require('path'),
 // CONSTANTS
 const {
     LOGO,
-    LOGO_MARGIN_PERCENTAGE,
     MAXHEIGHT,
     MAXWIDTH,
     TEXTDATA,
@@ -22,7 +21,6 @@ fs.readdir(sourcePath, (error, files) => {
         file !== '.DS_Store' && file !== '.gitignore'
             ? watermark(
                   `${sourcePath}/${file}`,
-                  LOGO_MARGIN_PERCENTAGE,
                   LOGO,
                   TEXTDATA
               ).then((image) => {
