@@ -5,6 +5,7 @@ const path = require('path'),
 // CONSTANTS
 const {
     LOGO,
+    SOURCE_DIRECTORY,
     MAXHEIGHT,
     MAXWIDTH,
     TEXTDATA,
@@ -12,22 +13,20 @@ const {
 
 const timeStamp = Date.now();
 
-const sourcePath = path.join(__dirname, 'images/source'),
+const sourcePath = path.join(__dirname, SOURCE_DIRECTORY),
     destinationPath = path.join(__dirname, `images/converted-${timeStamp}`);
 
 fs.readdir(sourcePath, (error, files) => {
     if (error) throw error;
     files.map((file) => {
         file !== '.DS_Store' && file !== '.gitignore'
-            ? watermark(
-                  `${sourcePath}/${file}`,
-                  LOGO,
-                  TEXTDATA
-              ).then((image) => {
-                  console.log('Watermarking image', file);
-                  image.scaleToFit(MAXHEIGHT, MAXWIDTH);
-                  image.write(`${destinationPath}/${file}`);
-              })
+            ? watermark(`${sourcePath}/${file}`, LOGO, TEXTDATA).then(
+                  (image) => {
+                      console.log('Watermarking image', file);
+                      image.scaleToFit(MAXHEIGHT, MAXWIDTH);
+                      image.write(`${destinationPath}/${file}`);
+                  }
+              )
             : null;
     });
 });
